@@ -24,13 +24,16 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
-public class MainActivity extends AppCompatActivity{
+public class MainActivity extends AppCompatActivity {
 
     private SQLiteDatabase db;
     private Cursor allCursor;
     public static final String TAG = "TIME";
     public ListView listActs;
     public ArrayList actionList;
+    public int addToPosition;
+    public int old_position;
+    private ArrayAdapter<String> arrayAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,7 +51,7 @@ public class MainActivity extends AppCompatActivity{
             allCursor = db.query(ActDatabaseHelper.dbName,
                     new String[]{"_id", "NAME"}, null,
                     null, null, null, null);
-            int pos = 0;
+            final int pos = 0;
 
             // set the cursor to the beginning of the iterator
             allCursor.moveToFirst();
@@ -60,9 +63,9 @@ public class MainActivity extends AppCompatActivity{
                 allCursor.moveToNext();
             }
             actionList.add(allCursor.getString(1));
+            addToPosition = actionList.size();
             // got every record from db
 
-            // Call the fucking Cursor again WOW
             /* deprecate for now
             CursorAdapter favoriteAdapter =
                     new SimpleCursorAdapter(MainActivity.this,
@@ -71,20 +74,46 @@ public class MainActivity extends AppCompatActivity{
                             new String[]{"NAME"},
                             new int[]{android.R.id.text1}, 0);
                             */
-            final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_activated_1,actionList);
+            arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_activated_1, actionList);
             listActs.setAdapter(arrayAdapter);
             listActs.setLongClickable(true);
-            listActs.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            listActs.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
 
+            listActs.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+                @Override
                 public boolean onItemLongClick(AdapterView<?> arg0, View arg1,
                                                int pos, long id) {
+                    Toast toast = Toast.makeText(MainActivity.this, String.format("The %s is removed", actionList.get(pos)), Toast.LENGTH_SHORT);
+                    toast.show();
                     actionList.remove(pos);
                     arrayAdapter.notifyDataSetChanged();
-
                     return true;
                 }
-
             });
+
+
+            /////////////////////////////////////////////
+
+            listActs.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> arg0, View arg1, int pos, long id) {
+                    Log.d(TAG, String.format("old_position = %d pos = %d", old_position, pos));
+                    Log.d(TAG, String.format("Checked = %d", listActs.getSelectedItemPosition()));
+                    // listActs.
+
+
+                    if (old_position == pos) {
+                        listActs.setItemChecked(pos, false);
+                        //use for moving old_position to unreal pos allowing toggle
+                        old_position = actionList.size();
+                    } else {
+                        listActs.setItemChecked(pos, true);
+                        old_position = pos;
+                    }
+
+                }
+            });
+
         } catch (SQLiteException e) {
             Toast toast = Toast.makeText(this, "Database unavailable", Toast.LENGTH_SHORT);
             toast.show();
@@ -98,14 +127,18 @@ public class MainActivity extends AppCompatActivity{
     }
 
 
-
-    public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-        /*actionList.remove(position);
-        Log.d(TAG, "Hello im at " + position);
-        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_activated_1,actionList);
-        listActs.setAdapter(arrayAdapter);*/
-        Toast.makeText(this, "long clicked pos: " + position, Toast.LENGTH_LONG).show();
-
-        return true;
+    public void OK_Button_onClick(View view) {
+        if (old_position != actionList.size()) {
+            actionList.add(old_position + 1, "TIME ADD JA");
+            arrayAdapter.notifyDataSetChanged();
+            Toast toast = Toast.makeText(MainActivity.this, "ADD JA", Toast.LENGTH_SHORT);
+            toast.show();
+        } else {
+            actionList.add(old_position, "TIME ADD JA");
+            arrayAdapter.notifyDataSetChanged();
+            Toast toast = Toast.makeText(MainActivity.this, "ADD JA", Toast.LENGTH_SHORT);
+            toast.show();
+        }
     }
+
 }
