@@ -87,20 +87,17 @@ public class MainActivity extends AppCompatActivity {
                     toast.show();
                     actionList.remove(pos);
                     arrayAdapter.notifyDataSetChanged();
+                    old_position = pos;
                     return true;
                 }
             });
 
-
-            /////////////////////////////////////////////
 
             listActs.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> arg0, View arg1, int pos, long id) {
                     Log.d(TAG, String.format("old_position = %d pos = %d", old_position, pos));
                     Log.d(TAG, String.format("Checked = %d", listActs.getSelectedItemPosition()));
-                    // listActs.
-
 
                     if (old_position == pos) {
                         listActs.setItemChecked(pos, false);
