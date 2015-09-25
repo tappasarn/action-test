@@ -31,8 +31,8 @@ public class MainActivity extends AppCompatActivity {
     public static final String TAG = "TIME";
     public ListView listActs;
     public ArrayList actionList;
-    public int addToPosition;
     public int old_position;
+    public int time_add_counter = 0;
     private ArrayAdapter<String> arrayAdapter;
 
     @Override
@@ -63,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
                 allCursor.moveToNext();
             }
             actionList.add(allCursor.getString(1));
-            addToPosition = actionList.size();
+            old_position = actionList.size();
             // got every record from db
 
             /* deprecate for now
@@ -129,16 +129,18 @@ public class MainActivity extends AppCompatActivity {
 
     public void OK_Button_onClick(View view) {
         if (old_position != actionList.size()) {
-            actionList.add(old_position + 1, "TIME ADD JA");
+            actionList.add(old_position + 1, String.format("TIME ADD %d JA", time_add_counter));
             arrayAdapter.notifyDataSetChanged();
             Toast toast = Toast.makeText(MainActivity.this, "ADD JA", Toast.LENGTH_SHORT);
             toast.show();
         } else {
-            actionList.add(old_position, "TIME ADD JA");
+            actionList.add(old_position, String.format("TIME ADD %d JA", time_add_counter));
             arrayAdapter.notifyDataSetChanged();
             Toast toast = Toast.makeText(MainActivity.this, "ADD JA", Toast.LENGTH_SHORT);
             toast.show();
         }
+        old_position++;
+        time_add_counter++;
     }
 
 }
