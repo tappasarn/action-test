@@ -18,6 +18,8 @@ import android.widget.ArrayAdapter;
 import android.widget.CursorAdapter;
 import android.widget.ListView;
 import android.widget.NumberPicker;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.SimpleCursorAdapter;
 import android.widget.Toast;
 
@@ -34,6 +36,11 @@ public class MainActivity extends AppCompatActivity {
     public int old_position;
     public int time_add_counter = 0;
     private ArrayAdapter<String> arrayAdapter;
+
+    public static final int RADIO_ID_FORWARD = 2131492947;
+    public static final int RADIO_ID_LEFT = 2131492948;
+    public static final int RADIO_ID_RIGHT = 2131492949;
+    public static final int RADIO_ID_BACK = 2131492950;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -124,20 +131,50 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    public void OK_Button_onClick(View view) {
-        if (old_position != actionList.size()) {
-            actionList.add(old_position + 1, String.format("TIME ADD %d JA", time_add_counter));
-            arrayAdapter.notifyDataSetChanged();
-            Toast toast = Toast.makeText(MainActivity.this, "ADD JA", Toast.LENGTH_SHORT);
-            toast.show();
-        } else {
-            actionList.add(old_position, String.format("TIME ADD %d JA", time_add_counter));
-            arrayAdapter.notifyDataSetChanged();
-            Toast toast = Toast.makeText(MainActivity.this, "ADD JA", Toast.LENGTH_SHORT);
-            toast.show();
+    public void AddButtonOnClick(View view) {
+        RadioGroup rg = (RadioGroup) findViewById(R.id.radioGroup);
+        int id = rg.getCheckedRadioButtonId();
+        NumberPicker np = (NumberPicker) findViewById(R.id.numberPicker);
+
+        StringBuilder commandBuilder = new StringBuilder();
+
+        switch (id){
+            case RADIO_ID_FORWARD:
+                commandBuilder.append("FORWARD");
+                break;
+            case RADIO_ID_LEFT:
+                commandBuilder.append("LEFT");
+                break;
+            case RADIO_ID_RIGHT:
+                commandBuilder.append("RIGHT");
+                break;
+            case RADIO_ID_BACK:
+                commandBuilder.append("BACK");
+                break;
+            default:
+                Toast toast = Toast.makeText(MainActivity.this, "Please select the direction", Toast.LENGTH_SHORT);
+                toast.show();
+                return;
         }
+        commandBuilder.append(" ");
+        commandBuilder.append(np.getValue() + "m");
+
+        if (old_position != actionList.size()) {
+            actionList.add(old_position + 1, commandBuilder.toString());
+        } else {
+            actionList.add(old_position, commandBuilder.toString());
+        }
+
+        arrayAdapter.notifyDataSetChanged();
+        Toast toast = Toast.makeText(MainActivity.this, commandBuilder.toString(), Toast.LENGTH_SHORT);
+        toast.show();
+
         old_position++;
         time_add_counter++;
+    }
+
+    public void SaveButtonOnClick(View view) {
+
     }
 
 }

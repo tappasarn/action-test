@@ -29,13 +29,13 @@
 
 
         <Button
-            android:id="@+id/OKbutton"
+            android:id="@+id/AddButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="OK"
-            android:layout_centerVertical="true"
-            android:layout_alignParentEnd="true"
-            android:onClick="OK_Button_onClick"/>
+            android:text="ADD"
+            android:onClick="AddButtonOnClick"
+            android:layout_alignTop="@+id/numberPicker"
+            android:layout_alignParentEnd="true" />
 
         <RadioGroup
             android:id="@+id/radioGroup"
@@ -60,7 +60,7 @@
                 android:id="@+id/radioButton2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_above="@+id/OKbutton"
+                android:layout_above="@+id/AddButton"
                 android:layout_alignStart="@+id/radioButton"
                 android:checked="false"
                 android:text="Left" />
@@ -69,7 +69,7 @@
                 android:id="@+id/radioButton3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignBottom="@+id/OKbutton"
+                android:layout_alignBottom="@+id/AddButton"
                 android:layout_alignStart="@+id/radioButton2"
                 android:checked="false"
                 android:text="Right" />
@@ -91,6 +91,16 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_centerHorizontal="true" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="SAVE"
+            android:id="@+id/SaveButton"
+            android:layout_alignBottom="@+id/numberPicker"
+            android:layout_alignStart="@+id/AddButton"
+            android:onClick="SaveButtonOnClick"
+            android:nestedScrollingEnabled="false" />
 
 
     </RelativeLayout>
