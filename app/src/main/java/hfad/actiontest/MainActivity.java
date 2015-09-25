@@ -1,6 +1,7 @@
 package hfad.actiontest;
 
 import android.app.ListActivity;
+import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -32,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
     private Cursor allCursor;
     public static final String TAG = "TIME";
     public ListView listActs;
-    public ArrayList actionList;
+    public ArrayList<String> actionList;
     public int old_position;
     public int time_add_counter = 0;
     private ArrayAdapter<String> arrayAdapter;
@@ -174,7 +175,19 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void SaveButtonOnClick(View view) {
+        SQLiteOpenHelper actDatabaseHelper = new ActDatabaseHelper(this);
+        db = actDatabaseHelper.getWritableDatabase();
 
+        db.execSQL("DROP TABLE IF EXISTS "+ActDatabaseHelper.dbName);
+
+        String str = String.format("CREATE TABLE %s (_id INTEGER PRIMARY KEY AUTOINCREMENT, ", ActDatabaseHelper.dbName);
+        db.execSQL(str + "NAME TEXT);");
+
+        ContentValues actValues = new ContentValues();
+        for (String eachCommand : actionList) {
+            actValues.put("NAME", eachCommand);
+            db.insert(ActDatabaseHelper.dbName, null, actValues);
+        }
     }
 
 }

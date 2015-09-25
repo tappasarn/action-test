@@ -50,9 +50,10 @@ public class ActDatabaseHelper extends SQLiteOpenHelper {
     }
 
 
-    public static void insertDrink(SQLiteDatabase db, String name) {
+    public void insertDrink(SQLiteDatabase db, String name) {
         ContentValues actValues = new ContentValues();
         actValues.put("NAME", name);
         db.insert(dbName, null, actValues);
     }
+
 }
